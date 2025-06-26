@@ -1,12 +1,13 @@
 {
-  "name": "postcss-tailwind-space-divide-optimizer",
+  "name": "postcss-tailwind-space-divide",
   "version": "0.0.0",
   "description": "PostCSS plugin to optimize the selector tailwindcss v3 .space-* & .divide-* classes",
   "keywords": [
     "postcss",
     "css",
     "postcss-plugin",
-    "postcss-tailwind-space-divide-optimizer"
+    "postcss-tailwind-space-divide",
+    "tailwindcss"
   ],
   "scripts": {
     "unit": "vitest index.test.js",
@@ -16,7 +17,7 @@
   },
   "author": "Ezira Ashenafi <eazash22@gmail.com>",
   "license": "MIT",
-  "repository": "https://github.com/eazash/postcss-tailwind-space-divide-optimizer",
+  "repository": "https://github.com/eazash/postcss-tailwind-space-divide",
   "engines": {
     "node": ">=18.0.0"
   },

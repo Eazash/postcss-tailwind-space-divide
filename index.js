@@ -43,7 +43,7 @@ module.exports = (opts = {}) => {
   // Work with options here
 
   return {
-    postcssPlugin: 'postcss-tailwind-space-divide-optimizer',
+    postcssPlugin: 'postcss-tailwind-space-divide',
     Rule(rule) {
       rule.selectors = rule.selectors.map(selector => {
         return selector.replaceAll(/:not\(\[hidden\]\)\s?~\s?:not\(\[hidden\]\)/g, ':not(:last-child)')
