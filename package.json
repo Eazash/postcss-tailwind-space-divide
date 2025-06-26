@@ -11,7 +11,8 @@
   "scripts": {
     "unit": "vitest index.test.js",
     "test": "pnpm run unit",
-    "lint": "eslint . --ext .js,.ts"
+    "lint": "eslint . --ext .js,.ts",
+    "release": "changelogen --release --publish"
   },
   "author": "Ezira Ashenafi <eazash22@gmail.com>",
   "license": "MIT",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "3.2.4",
+    "changelogen": "^0.6.1",
     "eslint": "^8.47.0",
     "postcss": "^8.4.27",
     "vitest": "^3.2.4"
