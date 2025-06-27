@@ -36,9 +36,18 @@ function getUpdatedDeclValue(prop, valueSpecifier) {
   }
 }
 
+const v3CompatibleChildSelector = "* + *"
+const v4ChildSelector = ":not(:last-child)"
+
 /**
- * @type {import('postcss').PluginCreator}
+ * @typedef PluginOptions
+ * @property {boolean} [useV3CompatibleSelector] - Switch to using the "* + *" child selector as the ":not(:last-child)" selector implemented in tailwindcss v4 requires modifying attributes 
  */
+
+/**
+ * @type {import('postcss').PluginCreator<PluginOptions>}
+ */
+
 module.exports = (opts = {}) => {
   // Work with options here
 
@@ -46,18 +55,21 @@ module.exports = (opts = {}) => {
     postcssPlugin: 'postcss-tailwind-space-divide',
     Rule(rule) {
       rule.selectors = rule.selectors.map(selector => {
-        return selector.replaceAll(/:not\(\[hidden\]\)\s?~\s?:not\(\[hidden\]\)/g, ':not(:last-child)')
+        return selector.replaceAll(/:not\(\[hidden\]\)\s?~\s?:not\(\[hidden\]\)/g, opts.useV3CompatibleSelector ? v3CompatibleChildSelector: v4ChildSelector)
       })
-      rule.walkDecls(/(?:margin-(?:top|bottom|right|left|(?:inline-|block-)(?:end|start))|border-(?:top|bottom|right|left|(?:inline-|block-)(?:end|start))-width)/, decl => {
-        // Grab the value specifier from the declaration value (eg. '1rem' or possibly any arbitrary value)
-        const valueSpecifierMatch = decl.value.trim().match(/^calc\((.*) \* (?:calc\(1 - )?var\(--tw/)
-        if (!valueSpecifierMatch) { return }
-        const valueSpecifier = valueSpecifierMatch[1]
-        const optimizedValue = getUpdatedDeclValue(decl.prop, valueSpecifier)
-        if (optimizedValue) {
-          decl.value = optimizedValue
-        }
-      })
+      if (!opts.useV3CompatibleSelector) {
+        // If using the v4 child selector, we need to update the declarations for margin and border widths
+        rule.walkDecls(/(?:margin-(?:top|bottom|right|left|(?:inline-|block-)(?:end|start))|border-(?:top|bottom|right|left|(?:inline-|block-)(?:end|start))-width)/, decl => {
+          // Grab the value specifier from the declaration value (eg. '1rem' or possibly any arbitrary value)
+          const valueSpecifierMatch = decl.value.trim().match(/^calc\((.*) \* (?:calc\(1 - )?var\(--tw/)
+          if (!valueSpecifierMatch) { return }
+          const valueSpecifier = valueSpecifierMatch[1]
+          const optimizedValue = getUpdatedDeclValue(decl.prop, valueSpecifier)
+          if (optimizedValue) {
+            decl.value = optimizedValue
+          }
+        })
+      }
     }
   }
 }

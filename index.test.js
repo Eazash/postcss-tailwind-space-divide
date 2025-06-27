@@ -1,7 +1,6 @@
 import postcss from 'postcss'
 import plugin from '.'
 import { it, expect } from 'vitest'
-import { describe } from 'vitest'
 
 async function run(input, output, opts = {}) {
   let result = await postcss([plugin(opts)]).process(input, { from: undefined })
@@ -15,7 +14,7 @@ it('does not change unrelated CSS', async () => {
 
 it('handles space-x-* selector', async () => {
   const input = `
-    .space-x-4 > :not(:last-child) {
+    .space-x-4 > :not([hidden]) ~ :not([hidden]) {
       --tw-space-x-reverse: 0;
       margin-right: calc(1rem * var(--tw-space-x-reverse));
       margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
@@ -139,6 +138,22 @@ it('handles prefixed space classes', async () => {
     }
   `
   await run(input, output, {})
+})
+
+it('preserves attributes when using v3 compatible selector', async () => {
+  const input = `.divide-y-4 > :not([hidden]) ~ :not([hidden]) {
+      --tw-divide-y-reverse: 0;
+      border-top-width: calc(4px * calc(1 - var(--tw-divide-y-reverse)));
+      border-bottom-width: calc(4px * var(--tw-divide-y-reverse));
+    }
+  `
+  const ouput = `.divide-y-4 > * + * {
+      --tw-divide-y-reverse: 0;
+      border-top-width: calc(4px * calc(1 - var(--tw-divide-y-reverse)));
+      border-bottom-width: calc(4px * var(--tw-divide-y-reverse));
+    }
+  `
+  await run(input, ouput, { useV3CompatibleSelector: true })
 })
 
 
