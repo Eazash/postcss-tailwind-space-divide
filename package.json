@@ -22,7 +22,8 @@
     "node": ">=18.0.0"
   },
   "peerDependencies": {
-    "postcss": "^8.4.27"
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "3.2.4",
