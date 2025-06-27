@@ -1,6 +1,6 @@
 {
   "name": "postcss-tailwind-space-divide",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "PostCSS plugin to optimize the selector tailwindcss v3 .space-* & .divide-* classes",
   "keywords": [
     "postcss",
